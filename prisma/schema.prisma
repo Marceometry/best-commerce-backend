@@ -11,6 +11,79 @@ model User {
   id       String @unique @default(uuid())
   username String @unique
   password String
+  name     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchases Purchase[]
+  store     Store?     @relation(fields: [storeId], references: [id])
+  storeId   String?
 
   @@map("users")
+}
+
+model Store {
+  id   String @unique @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+  products  Product[]
+  address   Address?
+  addressId String?
+
+  @@map("stores")
+}
+
+model Address {
+  id           String @unique @default(uuid())
+  number       String
+  street       String
+  neighborhood String
+  complement   String
+  city         String
+  state        String
+  country      String
+  zipCode      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Store   Store  @relation(fields: [storeId], references: [id])
+  storeId String @unique
+
+  @@map("addresses")
+}
+
+model Product {
+  id          String @unique @default(uuid())
+  name        String
+  description String
+  price       Int // cents
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchases Purchase[]
+  store     Store      @relation(fields: [storeId], references: [id])
+  storeId   String
+
+  @@map("products")
+}
+
+model Purchase {
+  id String @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@map("purchases")
 }
