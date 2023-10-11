@@ -20,6 +20,11 @@ import { Public } from '@/auth/decorators/public.decorator';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Post()
+  create(@CurrentUser() user: ICurrentUser, @Body() data: CreateProductDto) {
+    return this.productsService.create(user.sub, data);
+  }
+
   @Public()
   @Get()
   findAll() {
@@ -32,21 +37,13 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @Post()
-  create(
-    @CurrentUser() user: ICurrentUser,
-    @Body() createProductDto: CreateProductDto,
-  ) {
-    return this.productsService.create(user.sub, createProductDto);
-  }
-
   @Patch(':id')
   update(
     @CurrentUser() user: ICurrentUser,
     @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() data: UpdateProductDto,
   ) {
-    return this.productsService.update(user.sub, id, updateProductDto);
+    return this.productsService.update(user.sub, id, data);
   }
 
   @Delete(':id')

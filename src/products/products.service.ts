@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
+import { StoresService } from '@/stores/stores.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storesService: StoresService,
+  ) {}
 
   async create(userId: string, data: CreateProductDto) {
-    const { storeId } = await this.prisma.user.findFirstOrThrow({
-      where: { id: userId },
-    });
+    const { id: storeId } = await this.storesService.findByUser(userId);
     return this.prisma.product.create({ data: { ...data, storeId } });
   }
 
@@ -23,16 +25,12 @@ export class ProductsService {
   }
 
   async update(userId: string, id: string, data: UpdateProductDto) {
-    const { storeId } = await this.prisma.user.findFirstOrThrow({
-      where: { id: userId },
-    });
+    const { id: storeId } = await this.storesService.findByUser(userId);
     return this.prisma.product.update({ where: { id, storeId }, data });
   }
 
   async remove(userId: string, id: string) {
-    const { storeId } = await this.prisma.user.findFirstOrThrow({
-      where: { id: userId },
-    });
+    const { id: storeId } = await this.storesService.findByUser(userId);
     return this.prisma.product.delete({ where: { id, storeId } });
   }
 }
