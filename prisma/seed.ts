@@ -1,5 +1,5 @@
+import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
-import { fakerPT_BR as faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -8,12 +8,14 @@ async function main() {
   await prisma.purchase.deleteMany();
   await prisma.user.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
   await prisma.address.deleteMany();
   await prisma.store.deleteMany();
 
   const { id: storeId } = await prisma.store.create({
     data: { name: faker.company.name() },
   });
+  console.log(storeId);
 
   await prisma.address.create({
     data: {
@@ -39,18 +41,37 @@ async function main() {
     },
   });
 
+  const category1 = await prisma.category.create({
+    data: { name: faker.commerce.department(), storeId },
+  });
+  const category2 = await prisma.category.create({
+    data: { name: faker.commerce.department(), storeId },
+  });
+
   await prisma.product.createMany({
     data: [
       {
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         price: Number(faker.commerce.price({ dec: 0 })),
+        imageUrl: faker.image.urlLoremFlickr({ category: 'nature' }),
+        categoryId: category1.id,
         storeId,
       },
       {
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         price: Number(faker.commerce.price({ dec: 0 })),
+        imageUrl: faker.image.urlLoremFlickr({ category: 'nature' }),
+        categoryId: category1.id,
+        storeId,
+      },
+      {
+        name: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        price: Number(faker.commerce.price({ dec: 0 })),
+        imageUrl: faker.image.urlLoremFlickr({ category: 'nature' }),
+        categoryId: category2.id,
         storeId,
       },
     ],
@@ -63,6 +84,8 @@ async function main() {
           name: faker.commerce.productName(),
           description: faker.commerce.productDescription(),
           price: Number(faker.commerce.price({ dec: 0 })),
+          imageUrl: faker.image.urlLoremFlickr({ category: 'nature' }),
+          categoryId: category2.id,
           storeId,
         },
       },

@@ -26,6 +26,12 @@ export class ProductsController {
   }
 
   @Public()
+  @Get('/store/:storeId')
+  findByStore(@Param('storeId') storeId: string) {
+    return this.productsService.findByStore(storeId);
+  }
+
+  @Public()
   @Get()
   findAll() {
     return this.productsService.findAll();
