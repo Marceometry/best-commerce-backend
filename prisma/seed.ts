@@ -41,11 +41,17 @@ async function main() {
     },
   });
 
+  const cname1 = faker.commerce.department();
   const category1 = await prisma.category.create({
-    data: { name: faker.commerce.department(), storeId },
+    data: { name: cname1, slug: cname1.toLowerCase(), storeId },
   });
+  const cname2 = faker.commerce.department();
   const category2 = await prisma.category.create({
-    data: { name: faker.commerce.department(), storeId },
+    data: {
+      name: cname2,
+      slug: cname2.toLowerCase(),
+      storeId,
+    },
   });
 
   await prisma.product.createMany({

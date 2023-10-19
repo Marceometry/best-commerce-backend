@@ -12,7 +12,10 @@ export class PurchasesService {
   ) {}
 
   async create(userId: string, data: CreatePurchaseDto) {
-    return this.prisma.purchase.create({ data: { ...data, userId } });
+    return this.prisma.purchase.create({
+      data: { ...data, userId },
+      include: { product: true },
+    });
   }
 
   findByUser(userId: string) {

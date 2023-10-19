@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
+import { PurchasesService } from '@/purchases/purchases.service';
 import { StoresService } from '@/stores/stores.service';
+import { slugify } from '@/utils';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -9,6 +11,7 @@ export class ProductsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storesService: StoresService,
+    private readonly purchasesService: PurchasesService,
   ) {}
 
   async create(userId: string, data: CreateProductDto) {
@@ -24,7 +27,11 @@ export class ProductsService {
           ? {
               connectOrCreate: {
                 where: { id: data.category.id },
-                create: { name: data.category.name, storeId },
+                create: {
+                  name: data.category.name,
+                  slug: slugify(data.category.name),
+                  storeId,
+                },
               },
             }
           : undefined,
@@ -34,6 +41,14 @@ export class ProductsService {
 
   findByStore(storeId: string) {
     return this.prisma.product.findMany({ where: { storeId } });
+  }
+
+  async findByCategory(storeId: string, slug: string) {
+    const category = await this.prisma.category.findFirst({ where: { slug } });
+    const products = await this.prisma.product.findMany({
+      where: { storeId, category: { id: category.id } },
+    });
+    return { categoryName: category.name, products };
   }
 
   findAll() {
@@ -60,5 +75,16 @@ export class ProductsService {
   async remove(userId: string, id: string) {
     const { id: storeId } = await this.storesService.findByUser(userId);
     return this.prisma.product.delete({ where: { id, storeId } });
+  }
+
+  async buy(userId: string, id: string) {
+    const purchase = await this.purchasesService.create(userId, {
+      productId: id,
+    });
+    await this.prisma.product.update({
+      where: { id },
+      data: { purchases: { connect: { id: purchase.id } } },
+    });
+    return purchase;
   }
 }

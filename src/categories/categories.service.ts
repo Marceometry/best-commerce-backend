@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { StoresService } from '@/stores/stores.service';
+import { slugify } from '@/utils';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
@@ -13,7 +14,8 @@ export class CategoriesService {
 
   async create(userId: string, data: CreateCategoryDto) {
     const { id: storeId } = await this.storesService.findByUser(userId);
-    return this.prisma.category.create({ data: { ...data, storeId } });
+    const slug = slugify(data.name);
+    return this.prisma.category.create({ data: { ...data, slug, storeId } });
   }
 
   findByStore(storeId: string) {

@@ -8,5 +8,6 @@ import { PurchasesService } from './purchases.service';
   imports: [PrismaModule, StoresModule],
   controllers: [PurchasesController],
   providers: [PurchasesService],
+  exports: [PurchasesService],
 })
 export class PurchasesModule {}

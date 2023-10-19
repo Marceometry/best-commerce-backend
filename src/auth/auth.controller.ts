@@ -11,10 +11,18 @@ import { AuthService } from './auth.service';
 import { CurrentUser, ICurrentUser } from './decorators/current-user.decorator';
 import { Public } from './decorators/public.decorator';
 import { SignInDto } from './dto/sign-in.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('signup')
+  signUp(@Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(signUpDto);
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)

@@ -32,6 +32,15 @@ export class ProductsController {
   }
 
   @Public()
+  @Get('/store/:storeId/category/:slug')
+  findByCategory(
+    @Param('storeId') storeId: string,
+    @Param('slug') slug: string,
+  ) {
+    return this.productsService.findByCategory(storeId, slug);
+  }
+
+  @Public()
   @Get()
   findAll() {
     return this.productsService.findAll();
@@ -55,5 +64,10 @@ export class ProductsController {
   @Delete(':id')
   remove(@CurrentUser() user: ICurrentUser, @Param('id') id: string) {
     return this.productsService.remove(user.sub, id);
+  }
+
+  @Post(':id/buy')
+  buy(@CurrentUser() user: ICurrentUser, @Param('id') id: string) {
+    return this.productsService.buy(user.sub, id);
   }
 }

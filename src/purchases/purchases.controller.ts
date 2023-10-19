@@ -1,31 +1,14 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import {
   CurrentUser,
   ICurrentUser,
 } from '@/auth/decorators/current-user.decorator';
-import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { PurchasesService } from './purchases.service';
 
 @Controller('purchases')
 export class PurchasesController {
   constructor(private readonly purchasesService: PurchasesService) {}
-
-  @Post()
-  create(
-    @CurrentUser() user: ICurrentUser,
-    @Body() createPurchaseDto: CreatePurchaseDto,
-  ) {
-    return this.purchasesService.create(user.sub, createPurchaseDto);
-  }
 
   @Get('user/:userId')
   findByUser(@CurrentUser() user: ICurrentUser) {
