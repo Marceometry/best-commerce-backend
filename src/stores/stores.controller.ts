@@ -25,6 +25,11 @@ export class StoresController {
     return this.storesService.create(user.sub, data);
   }
 
+  @Get()
+  findUserStore(@CurrentUser() user: ICurrentUser) {
+    return this.storesService.findByUser(user.sub);
+  }
+
   @Public()
   @Get()
   findAll() {

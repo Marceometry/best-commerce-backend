@@ -10,14 +10,17 @@ import { PurchasesService } from './purchases.service';
 export class PurchasesController {
   constructor(private readonly purchasesService: PurchasesService) {}
 
-  @Get('user/:userId')
-  findByUser(@CurrentUser() user: ICurrentUser) {
-    return this.purchasesService.findByUser(user.sub);
-  }
-
-  @Get('store/:userId')
+  @Get('store')
   findByStore(@CurrentUser() user: ICurrentUser) {
     return this.purchasesService.findByStore(user.sub);
+  }
+
+  @Get('at/store/:storeId')
+  findByUser(
+    @CurrentUser() user: ICurrentUser,
+    @Param('storeId') storeId: string,
+  ) {
+    return this.purchasesService.findByUser(user.sub, storeId);
   }
 
   @Get(':id')

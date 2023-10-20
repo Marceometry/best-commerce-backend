@@ -18,8 +18,12 @@ export class PurchasesService {
     });
   }
 
-  findByUser(userId: string) {
-    return this.prisma.purchase.findMany({ where: { userId } });
+  findByUser(userId: string, storeId: string) {
+    return this.prisma.purchase.findMany({
+      where: { userId, product: { storeId } },
+      include: { product: true },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async findByStore(userId: string) {
