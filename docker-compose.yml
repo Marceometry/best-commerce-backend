@@ -4,8 +4,8 @@ services:
   api:
     build: .
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/home/app
+      - /home/app/node_modules
     ports:
       - '${PORT}:${PORT}'
     depends_on:

@@ -29,7 +29,10 @@ export class StoresService {
   }
 
   findOne(id: string) {
-    return this.prisma.store.findUnique({ where: { id } });
+    return this.prisma.store.findUnique({
+      where: { id },
+      include: { address: true },
+    });
   }
 
   update(userId: string, id: string, data: UpdateStoreDto) {

@@ -1,10 +1,10 @@
 FROM node:18
 
-WORKDIR /usr/src/app
+WORKDIR /home/app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn
 
 COPY . .
 

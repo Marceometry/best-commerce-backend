@@ -94,7 +94,8 @@ model Category {
 }
 
 model Purchase {
-  id String @unique @default(uuid())
+  id     String @unique @default(uuid())
+  amount Int // cents
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

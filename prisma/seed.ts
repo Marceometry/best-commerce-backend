@@ -32,10 +32,12 @@ async function main() {
   });
 
   const password = await bcrypt.hash('1234', 10);
+  const adminUsername = faker.internet.userName();
+  console.log(adminUsername);
   await prisma.user.create({
     data: {
       name: faker.person.fullName(),
-      username: faker.internet.userName(),
+      username: adminUsername,
       password,
       storeId,
     },
@@ -81,28 +83,6 @@ async function main() {
         storeId,
       },
     ],
-  });
-
-  await prisma.purchase.create({
-    data: {
-      product: {
-        create: {
-          name: faker.commerce.productName(),
-          description: faker.commerce.productDescription(),
-          price: Number(faker.commerce.price({ dec: 0 })),
-          imageUrl: faker.image.urlLoremFlickr({ category: 'nature' }),
-          categoryId: category2.id,
-          storeId,
-        },
-      },
-      user: {
-        create: {
-          name: faker.person.fullName(),
-          username: faker.internet.userName(),
-          password: await bcrypt.hash('5678', 10),
-        },
-      },
-    },
   });
 }
 

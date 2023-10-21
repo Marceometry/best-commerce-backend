@@ -78,8 +78,10 @@ export class ProductsService {
   }
 
   async buy(userId: string, id: string) {
+    const product = await this.prisma.product.findUnique({ where: { id } });
     const purchase = await this.purchasesService.create(userId, {
       productId: id,
+      amount: product.price,
     });
     await this.prisma.product.update({
       where: { id },
