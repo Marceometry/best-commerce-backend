@@ -16,6 +16,7 @@ export class ProductsService {
 
   async create(userId: string, data: CreateProductDto) {
     const { id: storeId } = await this.storesService.findByUser(userId);
+    const hasCategory = data.category?.name || data.category?.id;
     return this.prisma.product.create({
       data: {
         name: data.name,
@@ -23,7 +24,7 @@ export class ProductsService {
         price: data.price,
         imageUrl: data.imageUrl,
         store: { connect: { id: storeId } },
-        category: data.category
+        category: hasCategory
           ? {
               connectOrCreate: {
                 where: { id: data.category.id },

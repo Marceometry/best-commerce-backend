@@ -23,11 +23,11 @@ export class CategoriesService {
   }
 
   findAll() {
-    return this.prisma.product.findMany();
+    return this.prisma.category.findMany();
   }
 
   findOne(id: string) {
-    return this.prisma.product.findUnique({ where: { id } });
+    return this.prisma.category.findUnique({ where: { id } });
   }
 
   async update(userId: string, id: string, data: UpdateCategoryDto) {
