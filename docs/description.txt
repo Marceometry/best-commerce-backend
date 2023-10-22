@@ -1,0 +1,12 @@
+I have set up a RESTful API that's designed to manage and save data for each individual store (company using the system). This data will include products and sales, all linked to a unique STORE_ID. This STORE_ID will be the connecting bridge for each company's frontend to fetch or post data from/to our API, making their e-commerce functional.
+I've restructured the Database Schema to align with the project's needs. The revised schema can be found at `/docs/schema.png`.
+
+Although I'm primarily experienced in frontend development, I took the challenge of setting up a Docker container for this project. This container runs both the Postgres database and the NestJS API.
+
+For the ORM, I chose Prisma, due to its seamless integration with typescript, which automates the process of turning the database models into TypeScript types.
+
+The core architecture of this backend is inspired by the Angular-based structure which NestJS recommends. This structure not only promotes clean and maintainable code, but also aligns very well with Domain Driven Design (DDD) principles. Since NestJS is a strongly opinionated framework, it guided most of the structural decisions. This means modules, services and controllers were organized as per the recommended NestJS patterns.
+
+One thing to improve tough, thinking about scaling the project, is dividing the services into usecases, which certainly would help separating the business logic and applying the Single Responsibility principle.
+
+For instructions on how to run the project, see README.md
